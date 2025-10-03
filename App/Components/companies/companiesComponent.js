@@ -13,10 +13,10 @@ export class companiesComponent extends HTMLElement {
       </style>
       <ul class="nav nav-tabs">
       <li class="nav-item">
-        <a class="nav-link active mnucompanies" aria-current="page" href="#" data-verocultar='["#regcompanies",["#lstcompanies"]]'>Registrar companies</a>
+        <a class="nav-link active mnucompanies" aria-current="page" href="#" data-verocultar='["#regcompanies",["#lstcompanies"]]'>Registrar Compañía</a> <!-- Corregido el texto -->
       </li>
       <li class="nav-item">
-        <a class="nav-link mnucompanies" href="#" data-verocultar='["#lstcompanies",["#regcompanies"]]'>Listado de companiess</a>
+        <a class="nav-link mnucompanies" href="#" data-verocultar='["#lstcompanies",["#regcompanies"]]'>Listado de Compañías</a> <!-- Corregido el texto -->
       </li>
     </ul>
     <div class="container" id="regcompanies" style="display:block;">

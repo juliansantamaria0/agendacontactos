@@ -1,45 +1,55 @@
-import '/App/Components/contacto/regContacto.js';
-import '/App/Components/contacto/lstContacto.js';
-export class ContactoComponent extends HTMLElement {
-  constructor() {
-    super();
-    this.render();
-  }
+console.log('🔄 contactoComponent.js cargando...');
 
-  render() {
-    this.innerHTML = /* html */ `
-      <style rel="stylesheet">
-        @import "./App/Components/contacto/contactoStyle.css";
-      </style>
-      <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <a class="nav-link active mnucontacto" aria-current="page" href="#" data-verocultar='["#regContacto",["#lstContacto"]]'>Registrar Contacto</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link mnucontacto" href="#" data-verocultar='["#lstContacto",["#regContacto"]]'>Listado de contactos</a>
-      </li>
-    </ul>
-    <div class="container" id="regContacto" style="display:block;">
-        <reg-contacto></reg-contacto>
-    </div>
-    <div class="container" id="lstContacto" style="display:none;">
-        <lst-contacto></lst-contacto>
-    </div>    
-    `;
-    this.querySelectorAll(".mnucontacto").forEach((val, id) => {
-        val.addEventListener("click", (e)=>{
-            let data = JSON.parse(e.target.dataset.verocultar);
-            let cardVer = document.querySelector(data[0]);
-            cardVer.style.display = 'block';
-            data[1].forEach(card => {
-                let cardActual = document.querySelector(card);
-                cardActual.style.display = 'none';
+// Importa sub-componentes
+import './regContacto.js';
+import './lstContacto.js';
+console.log('✅ Sub-componentes de contacto importados');
+
+export class ContactoComponent extends HTMLElement {
+    constructor() {
+        super();
+        console.log('🆕 ContactoComponent constructor');
+        this.render();
+    }
+
+    render() {
+        console.log('🎨 ContactoComponent renderizando...');
+        this.innerHTML = `
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active mnucontacto" href="#" data-verocultar='["#regContacto",["#lstContacto"]]'>Registrar Contacto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mnucontacto" href="#" data-verocultar='["#lstContacto",["#regContacto"]]'>Listado de contactos</a>
+                </li>
+            </ul>
+            <div class="container mt-3" id="regContacto" style="display:block;">
+                <reg-contacto></reg-contacto>
+            </div>
+            <div class="container mt-3" id="lstContacto" style="display:none;">
+                <lst-contacto></lst-contacto>
+            </div>
+        `;
+        console.log('✅ ContactoComponent HTML inyectado');
+
+        // Event listeners para pestañas
+        this.querySelectorAll(".mnucontacto").forEach((val) => {
+            val.addEventListener("click", (e) => {
+                let data = JSON.parse(e.target.dataset.verocultar);
+                let cardVer = this.querySelector(data[0]);
+                if (cardVer) cardVer.style.display = 'block';
+                data[1].forEach(card => {
+                    let cardActual = this.querySelector(card);
+                    if (cardActual) cardActual.style.display = 'none';
+                });
+                // Actualiza active
+                this.querySelectorAll(".mnucontacto").forEach(l => l.classList.remove('active'));
+                e.target.classList.add('active');
+                e.preventDefault();
             });
-            e.stopImmediatePropagation();
-            e.preventDefault();
-        })
-    });
-  }
+        });
+    }
 }
 
 customElements.define("contacto-component", ContactoComponent);
+console.log('✅ ContactoComponent definido');

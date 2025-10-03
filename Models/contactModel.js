@@ -4,5 +4,6 @@ const ContactModel = {
     nroCelular: '',
     emailContacto: '',
     nroResidencia: ''
-}
+};
+
 export default ContactModel;

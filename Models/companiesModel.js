@@ -1,8 +1,9 @@
-const ContactModel = {
-    nombre: '',
-    email: '',
-    UkNiu: '',
-    ciudad: '',
-    direccion: ''
-}
-export default ContactModel;
+const CompaniesModel = {
+    nombrecompanies: '',
+    apellidocompanies: '',
+    nroCelular: '',
+    emailcompanies: '',
+    nroResidencia: ''
+};
+
+export default CompaniesModel;

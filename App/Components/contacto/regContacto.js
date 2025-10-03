@@ -1,4 +1,4 @@
-import {postContacts,patchContacts,deleteContacts} from '../../../Apis/contact/contactApi.js';
+import {postContact,patchContact,deleteContact} from '../../../Apis/contact/contactApi.js'; // Corregido
 import ContactModel from '../../../Models/contactModel.js';
 export class RegContacto extends HTMLElement {
   constructor() {
@@ -85,7 +85,7 @@ eventoEditar =() =>{
 }
 eventoEliminar =() =>{
     document.querySelector('#btnEliminar').addEventListener("click",(e) =>{
-        this.delData();
+        this.delData(e); 
         e.stopImmediatePropagation();
         e.preventDefault();        
     });
@@ -94,11 +94,11 @@ ctrlBtn = (e) =>{
     let data = JSON.parse(e);
     data[0].forEach(boton => {
         let btnActual = document.querySelector(boton);
-        btnActual.classList.remove('disabled');
+        if (btnActual) btnActual.classList.remove('disabled'); 
     });
     data[1].forEach(boton => {
         let btnActual = document.querySelector(boton);
-        btnActual.classList.add('disabled');
+        if (btnActual) btnActual.classList.add('disabled'); 
     });
 }
 enabledBtns =() =>{
@@ -111,54 +111,57 @@ editData = () =>{
     const datos = Object.fromEntries(new FormData(frmRegistro).entries());
     const idView = document.querySelector('#idView');
     let id = idView.textContent;
-    patchContacts(datos,id)
+    patchContact(datos,id) // Corregido
     .then(response => {
         // Verificar si la solicitud fue exitosa (código de respuesta en el rango 200)
         if (response.ok) {
             return response.json(); // Devolver la respuesta como JSON
         } else {
             // Si la respuesta no fue exitosa, lanzar una excepción
-            throw new Error(`Error en la solicitud POST: ${response.status} - ${response.statusText}`);
+            throw new Error(`Error en la solicitud PATCH: ${response.status} - ${response.statusText}`); 
         }
     })
     .then(responseData => {
         // Hacer algo con la respuesta exitosa si es necesario
+        console.log('Contact updated:', responseData); 
+        document.querySelector('lst-contacto').loadContacts(); 
     })
     .catch(error => {
-        console.error('Error en la solicitud POST:', error.message);
-        // Puedes manejar el error de otra manera si es necesario
+        console.error('Error en la solicitud PATCH:', error.message); 
+        
     });
     
 }
-delData = () =>{
+delData = (e) =>{
     const idView = document.querySelector('#idView');
     let id = idView.textContent;
-    deleteContacts(id)
+    deleteContact(id) // Corregido
     .then(response => {
         // Verificar si la solicitud fue exitosa (código de respuesta en el rango 200)
         if (response.ok) {
             return response.json(); // Devolver la respuesta como JSON
         } else {
             // Si la respuesta no fue exitosa, lanzar una excepción
-            throw new Error(`Error en la solicitud POST: ${response.status} - ${response.statusText}`);
+            throw new Error(`Error en la solicitud DELETE: ${response.status} - ${response.statusText}`); 
         }
     })
     .then(responseData => {
         this.resetIdView();
         this.disableFrm(true);
         this.ctrlBtn(e.target.dataset.ed);
-        // Hacer algo con la respuesta exitosa si es necesario
+        console.log('Contact deleted:', responseData); 
+        document.querySelector('lst-contacto').loadContacts(); 
     })
     .catch(error => {
-        console.error('Error en la solicitud POST:', error.message);
-        // Puedes manejar el error de otra manera si es necesario
+        console.error('Error en la solicitud DELETE:', error.message); 
+       
     });   
 }
 saveData = () =>{
         const frmRegistro = document.querySelector('#frmDataContacto');
         document.querySelector('#btnGuardar').addEventListener("click",(e) =>{
             const datos = Object.fromEntries(new FormData(frmRegistro).entries());
-            postContacts(datos)
+            postContact(datos) // Corregido
             .then(response => {
                 // Verificar si la solicitud fue exitosa (código de respuesta en el rango 200)
                 if (response.ok) {
@@ -171,6 +174,8 @@ saveData = () =>{
             .then(responseData => {
                 // Hacer algo con la respuesta exitosa si es necesario
                 this.viewData(responseData.id);
+                console.log('Contact added:', responseData); 
+                document.querySelector('lst-contacto').loadContacts(); 
             })
             .catch(error => {
                 console.error('Error en la solicitud POST:', error.message);
@@ -197,9 +202,12 @@ disableFrm = (estado) =>{
         let myFrm = new FormData();
         Object.entries(ContactModel).forEach(([key, value]) => myFrm.append(key, value));
         myFrm.forEach((value, key) => {
-             frmRegistro.elements[key].value= value;
-             frmRegistro.elements[key].disabled = estado;
+             if (frmRegistro.elements[key]) { 
+                frmRegistro.elements[key].value= value;
+                frmRegistro.elements[key].disabled = estado;
+             }
         })
     }
 }
 customElements.define("reg-contacto", RegContacto);
+

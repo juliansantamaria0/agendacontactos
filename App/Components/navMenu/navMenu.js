@@ -1,53 +1,64 @@
+console.log('🔄 navMenu.js cargando...');
+
 export class NavMenu extends HTMLElement {
     constructor() {
         super();
+        console.log('🆕 NavMenu constructor ejecutado');
         this.render();
     }
 
     render() {
-        this.innerHTML = /* html */ `
-        <style rel="stylesheet">
-          @import "./App/Components/navMenu/menuStyle.css";
-        </style>
-          <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="#">Agenda</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#" data-verocultar='["c"]'>Contactos</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["ct"]'></a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["countries"]'>Países</a>
-                  </li>
-                   <li class="nav-item">
-                    <a class="nav-link" href="#" data-verocultar='["regions"]'>regiones</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>        
+        console.log('🎨 NavMenu renderizando...');
+        this.innerHTML = `
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Agenda</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-verocultar='["c"]'>Contactos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-verocultar='["ct"]'>Citas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-verocultar='["countries"]'>Países</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-verocultar='["regions"]'>Regiones</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-verocultar='["cities"]'>Ciudades</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-verocultar='["branches"]'>Sucursales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-verocultar='["companies"]'>Compañías</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         `;
-        
+        console.log('✅ NavMenu HTML inyectado');
+
         // Event listeners para navegación
         this.querySelectorAll(".nav-link").forEach((link) => {
             link.addEventListener("click", (e) => {
+                console.log('🔗 Clic en:', e.target.textContent);
                 const data = JSON.parse(e.target.dataset.verocultar);
                 const mainContent = document.querySelector('#mainContent');
-                
                 if (!mainContent) {
-                    console.error('#mainContent no encontrado');
+                    console.error('❌ mainContent no encontrado');
                     return;
                 }
-                
                 mainContent.innerHTML = "";
-                
+                console.log('📄 Cargando componente para:', data[0]);
+
                 switch (data[0]) {
                     case 'c':
                         mainContent.innerHTML = "<contacto-component></contacto-component>";
@@ -58,28 +69,40 @@ export class NavMenu extends HTMLElement {
                     case 'countries':
                         mainContent.innerHTML = "<country-component></country-component>";
                         break;
-                      case 'regions':
+                    case 'regions':
                         mainContent.innerHTML = "<region-component></region-component>";
                         break;
+                    case 'cities':
+                        mainContent.innerHTML = "<city-component></city-component>";
+                        break;
+                    case 'branches':
+                        mainContent.innerHTML = "<branches-component></branches-component>";
+                        break;
+                    case 'companies':
+                        mainContent.innerHTML = "<companies-component></companies-component>";
+                        break;
                     default:
-                        console.log("Opción inválida");
+                        console.log("Opción inválida:", data[0]);
                 }
-                
-                // Actualiza active class
+
+                // Actualiza clase active
                 this.querySelectorAll(".nav-link").forEach(l => l.classList.remove('active'));
                 e.target.classList.add('active');
-                
+
                 e.preventDefault();
-                e.stopPropagation();
             });
         });
 
-        // Carga inicial: Contactos por defecto
+        // Carga inicial: Contactos
         setTimeout(() => {
             const initialLink = this.querySelector('a[data-verocultar=\'["c"]\']');
-            if (initialLink) initialLink.click();
-        }, 100); // Pequeño delay para asegurar que el DOM esté listo
+            if (initialLink) {
+                console.log('🚀 Carga inicial: Contactos');
+                initialLink.click();
+            }
+        }, 100);
     }
 }
 
 customElements.define("nav-menu", NavMenu);
+console.log('✅ NavMenu definido como custom element');

@@ -1,0 +1,53 @@
+ {
+  "Contacto": [
+    {
+      "id": 1,
+      "nombreContacto": "Juan",
+      "apellidoContacto": "Pérez",
+      "nroCelular": "123456789",
+      "emailContacto": "juan@example.com",
+      "nroResidencia": "123"
+    }
+  ],
+  "countries": [
+    {
+      "id": 1,
+      "nombre": "Argentina"
+    }
+  ],
+  "regions": [
+    {
+      "id": 1,
+      "nombre": "Buenos Aires",
+      "PaisId": 1
+    }
+  ],
+  "cities": [
+    {
+      "id": 1,
+      "nombre": "La Plata",
+      "RegionId": 1
+    }
+  ],
+  "branches": [
+    {
+      "id": 1,
+      "nombrebranches": "Sucursal Centro",
+      "apellidobranches": "Principal",
+      "nroCelular": "987654321",
+      "emailbranches": "sucursal@example.com",
+      "nroResidencia": "456"
+    }
+  ],
+  "companies": [
+    {
+      "id": 1,
+      "nombrecompanies": "Empresa Ejemplo",
+      "apellidocompanies": "SA",
+      "nroCelular": "555666777",
+      "emailcompanies": "empresa@example.com",
+      "nroResidencia": "789"
+    }
+  ]
+}
+

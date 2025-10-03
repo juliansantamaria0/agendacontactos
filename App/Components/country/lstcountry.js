@@ -1,79 +1,65 @@
-import { getCountries } from '../../../Apis/countries/countriesApi.js'; 
+console.log('🔄 lstcountry.js cargando...');
 
-export class LstCountry extends HTMLElement { 
-  constructor() {
-    super();
-    this.render();
-    this.loadCountries(); 
-  }
+import {getCountries} from '../../../Apis/countries/countriesApi.js';
+import './countryStyle.css';
 
-  render() {
-    this.innerHTML = /* html */ `
-      <style rel="stylesheet">
-        @import "./App/Components/country/countryStyle.css"; /* Usar el estilo de country */
-      </style>
-        <div class="card mt-3">
-            <div class="card-header">
-                Listado de Países
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nombre del País</th>
-                                <th scope="col">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="countryListBody">
-                            <!-- Los países se cargarán aquí dinámicamente -->
-                        </tbody>
+export class LstCountry extends HTMLElement {
+    constructor() {
+        super();
+        console.log('🆕 LstCountry constructor');
+        this.render();
+        this.loadCountries();
+    }
+
+    render() {
+        this.innerHTML = `
+            <div class="card">
+                <div class="card-header"><h5>Listado de Países</h5></div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead><tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr></thead>
+                        <tbody id="tbodyCountries"></tbody>
                     </table>
                 </div>
             </div>
-        </div>     
-      `;
-  }
-
-  async loadCountries() { 
-    const countryListBody = this.querySelector('#countryListBody'); 
-    countryListBody.innerHTML = '';
-
-    try {
-      const response = await getCountries();
-      if (response && response.status === 200) {
-        const countries = await response.json(); 
-        console.log("📌 Países desde API:", countries); // 👈 para debug
-
-        if (countries.length > 0) {
-          countries.forEach(country => {
-            // Detecta el campo correcto automáticamente
-
-
-            const row = document.createElement('tr');
-            row.innerHTML = `
-              <th scope="row">${country.id}</th>
-              <td>${country.nombre}</td>
-              <td>
-                <button class="btn btn-warning btn-sm me-2" data-id="${country.id}" data-action="edit">Editar</button>
-                <button class="btn btn-danger btn-sm" data-id="${country.id}" data-action="delete">Eliminar</button>
-              </td>
-            `;
-            countryListBody.appendChild(row);
-          });
-        } else {
-          countryListBody.innerHTML = `<tr><td colspan="3" class="text-center">No hay países registrados.</td></tr>`;
-        }
-      } else {
-        console.error('Error al cargar los países:', response ? response.statusText : 'Respuesta indefinida');
-        countryListBody.innerHTML = `<tr><td colspan="3" class="text-center text-danger">Error al cargar los países.</td></tr>`;
-      }
-    } catch (error) {
-      console.error('Error en la solicitud de países:', error); 
-      countryListBody.innerHTML = `<tr><td colspan="3" class="text-center text-danger">Error de red al cargar los países.</td></tr>`;
+        `;
     }
-  }
+
+    async loadCountries() {
+        const response = await getCountries();
+        if (response && response.ok) {
+            const data = await response.json();
+            const tbody = this.querySelector('#tbodyCountries');
+            tbody.innerHTML = '';
+            data.forEach(country => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${country.id}</td>
+                        <td>${country.nombre}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="editCountry(${country.id}, ${JSON.stringify(country)})">Editar</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCountry(${country.id})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } else {
+            this.querySelector('#tbodyCountries').innerHTML = '<tr><td colspan="3">Error al cargar</td></tr>';
+        }
+    }
 }
 
+window.deleteCountry = async (id) => {
+    if (confirm('¿Eliminar?')) {
+        const {deleteCountry} = await import('../../../Apis/countries/countriesApi.js');
+        const response = await deleteCountry(id);
+        if (response && response.ok) {
+            alert('Eliminado');
+            const lstComponent = document.querySelector('lst-country');
+            if (lstComponent) lstComponent.loadCountries();
+        }
+    }
+};
+
 customElements.define("lst-country", LstCountry);
+console.log('✅ LstCountry definido');

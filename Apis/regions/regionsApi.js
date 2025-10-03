@@ -1,21 +1,21 @@
-const URL_API = "https://68dc4be97cd1948060a9f36c.mockapi.io/";
+const URL_API = "http://localhost:3000"; 
 const myHeaders = new Headers({
     "Content-Type": "application/json"
 });
 
-const getregion = async () => {
+const getRegions = async () => { 
     try {
         const respuesta = await fetch(`${URL_API}/regions`); 
         if (respuesta.status === 200) {
             return respuesta;
         } else if (respuesta.status === 401) {
-            console.log('URL no correcta');
+            console.log('La url no es correcta');
             return null;
         } else if (respuesta.status === 404) {
-            console.log('El país no existe');
+            console.log('La región no existe');
             return null;
         } else {
-            console.log('Error en petición');
+            console.log('Se presento un error en la peticion consulte al Administrador');
             return null;
         }
     } catch (error) {
@@ -24,7 +24,7 @@ const getregion = async () => {
     }
 };
 
-const postregion = async (datos) => {
+const postRegion = async (datos) => {
     try {
         return await fetch(`${URL_API}/regions`, { 
             method: "POST",
@@ -32,11 +32,11 @@ const postregion = async (datos) => {
             body: JSON.stringify(datos)
         });
     } catch (error) {
-        console.error('Error POST:', error.message);
+        console.error('Error en la solicitud POST:', error.message);
     }
 };
 
-const patchregion = async (datos, id) => {
+const patchRegion = async (datos, id) => {
     try {
         return await fetch(`${URL_API}/regions/${id}`, { 
             method: "PATCH",
@@ -44,24 +44,24 @@ const patchregion = async (datos, id) => {
             body: JSON.stringify(datos)
         });
     } catch (error) {
-        console.error('Error PATCH:', error.message);
+        console.error('Error en la solicitud PATCH:', error.message);
     }
 };
 
-const deleteregion = async (id) => {
+const deleteRegion = async (id) => {
     try {
         return await fetch(`${URL_API}/regions/${id}`, { 
             method: "DELETE",
             headers: myHeaders,
         });
     } catch (error) {
-        console.error('Error DELETE:', error.message);
+        console.error('Error en la solicitud DELETE:', error.message);
     }
 };
 
 export {
-    getregion as getregions,
-    postregion as postregions,
-    patchregion as patchregions,
-    deleteregion as deleteregions
+    getRegions, 
+    postRegion,
+    patchRegion,
+    deleteRegion
 };
